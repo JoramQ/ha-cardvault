@@ -202,7 +202,6 @@ export class CardVaultAddDialog extends LitElement {
                             <div class="form-group" style="max-width:140px">
                                 <label>Type</label>
                                 <select
-                                    .value=${this._barcodeType}
                                     @change=${(e: Event) =>
                                         (this._barcodeType = (
                                             e.target as HTMLSelectElement
@@ -210,7 +209,10 @@ export class CardVaultAddDialog extends LitElement {
                                 >
                                     ${BARCODE_TYPES.map(
                                         (t) =>
-                                            html`<option value=${t.value}>
+                                            html`<option
+                                                value=${t.value}
+                                                ?selected=${this._barcodeType === t.value}
+                                            >
                                                 ${t.label}
                                             </option>`
                                     )}

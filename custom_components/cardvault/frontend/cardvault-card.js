@@ -546,10 +546,12 @@ const ut=t=>(e,r)=>{void 0!==r?r.addInitializer(()=>{customElements.define(t,e)}
                             <div class="form-group" style="max-width:140px">
                                 <label>Type</label>
                                 <select
-                                    .value=${this._barcodeType}
                                     @change=${t=>this._barcodeType=t.target.value}
                                 >
-                                    ${ts.map(t=>F`<option value=${t.value}>
+                                    ${ts.map(t=>F`<option
+                                                value=${t.value}
+                                                ?selected=${this._barcodeType===t.value}
+                                            >
                                                 ${t.label}
                                             </option>`)}
                                 </select>
