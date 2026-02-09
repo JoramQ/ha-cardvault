@@ -213,18 +213,26 @@ class BarcodeScanStatusView(HomeAssistantView):
 
     async def get(self, request: web.Request) -> web.Response:
         """Check if barcode scanning is available."""
-        try:
-            from pyzbar.pyzbar import decode  # noqa: F401
+        hass: HomeAssistant = request.app["hass"]
 
+        def _check() -> bool:
+            try:
+                from pyzbar.pyzbar import decode  # noqa: F401
+
+                return True
+            except ImportError:
+                return False
+
+        available = await hass.async_add_executor_job(_check)
+        if available:
             return self.json({"available": True})
-        except ImportError:
-            return self.json(
-                {
-                    "available": False,
-                    "reason": "libzbar0 system library is not installed. "
-                    "Install it with: apt install libzbar0",
-                }
-            )
+        return self.json(
+            {
+                "available": False,
+                "reason": "libzbar0 system library is not installed. "
+                "Install it with: apt install libzbar0",
+            }
+        )
 
 
 class BarcodeScanView(HomeAssistantView):
