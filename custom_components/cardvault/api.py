@@ -204,6 +204,29 @@ class CardImageView(HomeAssistantView):
         return self.json_message("Image deleted")
 
 
+class BarcodeScanStatusView(HomeAssistantView):
+    """Handle /api/cardvault/scan/status."""
+
+    url = "/api/cardvault/scan/status"
+    name = "api:cardvault:scan:status"
+    requires_auth = True
+
+    async def get(self, request: web.Request) -> web.Response:
+        """Check if barcode scanning is available."""
+        try:
+            from pyzbar.pyzbar import decode  # noqa: F401
+
+            return self.json({"available": True})
+        except ImportError:
+            return self.json(
+                {
+                    "available": False,
+                    "reason": "libzbar0 system library is not installed. "
+                    "Install it with: apt install libzbar0",
+                }
+            )
+
+
 class BarcodeScanView(HomeAssistantView):
     """Handle /api/cardvault/scan."""
 
@@ -238,5 +261,6 @@ API_VIEWS = [
     CardListView,
     CardDetailView,
     CardImageView,
+    BarcodeScanStatusView,
     BarcodeScanView,
 ]

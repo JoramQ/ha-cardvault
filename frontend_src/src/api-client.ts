@@ -88,6 +88,18 @@ export class CardVaultAPI {
             throw new Error(`Failed to delete image: ${resp.status}`);
     }
 
+    async checkScanAvailable(): Promise<{
+        available: boolean;
+        reason?: string;
+    }> {
+        const resp = await fetch("/api/cardvault/scan/status", {
+            headers: this.headers,
+        });
+        if (!resp.ok)
+            throw new Error(`Failed to check scan status: ${resp.status}`);
+        return resp.json();
+    }
+
     async scanBarcode(file: File): Promise<BarcodeResult[]> {
         const formData = new FormData();
         formData.append("file", file);

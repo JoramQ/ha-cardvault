@@ -39,6 +39,8 @@ export class CardVaultAddDialog extends LitElement {
     @state() private _note = "";
     @state() private _color = "#607D8B";
     @state() private _scanning = false;
+    @state() private _scanAvailable = true;
+    @state() private _scanUnavailableReason = "";
     @state() private _scanResult = "";
     @state() private _saving = false;
     @state() private _error = "";
@@ -53,6 +55,18 @@ export class CardVaultAddDialog extends LitElement {
             this._barcodeType = this.editCard.barcode_type;
             this._note = this.editCard.note || "";
             this._color = this.editCard.color || "#607D8B";
+        }
+        this._checkScanAvailability();
+    }
+
+    private async _checkScanAvailability(): Promise<void> {
+        try {
+            const api = new CardVaultAPI(this.hass);
+            const status = await api.checkScanAvailable();
+            this._scanAvailable = status.available;
+            this._scanUnavailableReason = status.reason || "";
+        } catch {
+            // If the check fails, leave scan enabled (fail open)
         }
     }
 
@@ -225,12 +239,19 @@ export class CardVaultAddDialog extends LitElement {
                             <button
                                 class="btn btn-secondary"
                                 @click=${this._handleScan}
-                                ?disabled=${this._scanning}
+                                ?disabled=${this._scanning || !this._scanAvailable}
                             >
                                 ${this._scanning
                                     ? html`<span class="loading"></span>`
                                     : "Scan from Image"}
                             </button>
+                            ${!this._scanAvailable
+                                ? html`<p
+                                      style="color:var(--secondary-text-color,#727272);font-size:0.8em;margin:4px 0 0"
+                                  >
+                                      ${this._scanUnavailableReason}
+                                  </p>`
+                                : nothing}
                             ${this._scanResult
                                 ? html`<div class="scan-result">
                                       ${this._scanResult}
