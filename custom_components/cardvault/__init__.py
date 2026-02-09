@@ -54,7 +54,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Ensure images directory exists
     images_dir = Path(hass.config.path(IMAGES_SUBDIR))
-    await hass.async_add_executor_job(images_dir.mkdir, True)
+    await hass.async_add_executor_job(lambda: images_dir.mkdir(exist_ok=True))
 
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN]["store"] = store
