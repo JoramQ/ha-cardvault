@@ -3,6 +3,7 @@
     "name": "CardVault",
     "codeowners": ["@JoramQ"],
     "config_flow": true,
+    "after_dependencies": ["lovelace"],
     "dependencies": ["frontend", "http"],
     "documentation": "https://github.com/JoramQ/ha-cardvault",
     "issue_tracker": "https://github.com/JoramQ/ha-cardvault/issues",

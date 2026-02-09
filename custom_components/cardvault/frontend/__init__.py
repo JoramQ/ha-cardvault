@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from homeassistant.components.frontend import async_register_built_in_panel
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.core import HomeAssistant
 
@@ -39,23 +38,34 @@ async def _register_lovelace_resource(hass: HomeAssistant) -> None:
     """Register the JS module as a Lovelace resource if using storage mode."""
     # Only works in storage mode (the default for most HA installs)
     try:
-        from homeassistant.components.lovelace import (  # type: ignore[attr-defined]
+        from homeassistant.components.lovelace.resources import (  # type: ignore[import-untyped]
             ResourceStorageCollection,
         )
-        from homeassistant.components.lovelace.const import (  # type: ignore[attr-defined]
-            RESOURCE_TYPE_MODULE,
-        )
     except ImportError:
-        _LOGGER.debug("Lovelace resource registration not available")
-        return
-
-    resources: ResourceStorageCollection | None = None
+        try:
+            from homeassistant.components.lovelace import (  # type: ignore[attr-defined]
+                ResourceStorageCollection,
+            )
+        except ImportError:
+            _LOGGER.warning(
+                "CardVault: Could not import ResourceStorageCollection — "
+                "auto-registration of Lovelace resource skipped. "
+                "Add the resource manually in Settings → Dashboards → Resources: %s",
+                JS_URL,
+            )
+            return
 
     # Access the lovelace resource collection
     lovelace_data = hass.data.get("lovelace")
     if lovelace_data is None:
-        _LOGGER.debug("Lovelace data not available")
+        _LOGGER.warning(
+            "CardVault: Lovelace data not available — "
+            "add the resource manually in Settings → Dashboards → Resources: %s",
+            JS_URL,
+        )
         return
+
+    resources: ResourceStorageCollection | None = None
 
     # Try to get resources from the lovelace data
     if hasattr(lovelace_data, "resources"):
@@ -64,7 +74,11 @@ async def _register_lovelace_resource(hass: HomeAssistant) -> None:
             resources = res
 
     if resources is None:
-        _LOGGER.debug("Lovelace resources collection not available (YAML mode?)")
+        _LOGGER.warning(
+            "CardVault: Lovelace resources collection not available (YAML mode?). "
+            "Add the resource manually in Settings → Dashboards → Resources: %s",
+            JS_URL,
+        )
         return
 
     # Ensure loaded
@@ -80,13 +94,13 @@ async def _register_lovelace_resource(hass: HomeAssistant) -> None:
             if item.get("url") != resource_url:
                 await resources.async_update_item(
                     item["id"],
-                    {"url": resource_url, "res_type": RESOURCE_TYPE_MODULE},
+                    {"url": resource_url, "res_type": "module"},
                 )
                 _LOGGER.info("Updated CardVault Lovelace resource to %s", resource_url)
             return
 
     # Register new resource
     await resources.async_create_item(
-        {"url": resource_url, "res_type": RESOURCE_TYPE_MODULE}
+        {"url": resource_url, "res_type": "module"}
     )
     _LOGGER.info("Registered CardVault Lovelace resource: %s", resource_url)
