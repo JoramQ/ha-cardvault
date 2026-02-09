@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import CoreState, Event, HomeAssistant
 from homeassistant.const import EVENT_HOMEASSISTANT_STARTED
@@ -28,8 +29,14 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
         # Register the images directory as a static path
         images_dir = Path(hass.config.path(IMAGES_SUBDIR))
         images_dir.mkdir(exist_ok=True)
-        hass.http.register_static_path(
-            f"{URL_BASE}/images", str(images_dir), cache_headers=False
+        await hass.http.async_register_static_paths(
+            [
+                StaticPathConfig(
+                    url_path=f"{URL_BASE}/images",
+                    path=str(images_dir),
+                    cache_headers=False,
+                )
+            ]
         )
 
     if hass.state is CoreState.running:
