@@ -12,6 +12,7 @@ export class CardVaultDetail extends LitElement {
     @property({ attribute: false }) card!: Card;
 
     @state() private _barcodeError = false;
+    @state() private _fullscreenImage: string | null = null;
 
     protected updated(changed: Map<string, unknown>): void {
         if (changed.has("card") && this.card) {
@@ -66,7 +67,6 @@ export class CardVaultDetail extends LitElement {
 
     protected render(): TemplateResult {
         const c = this.card;
-        const typeLabel = c.barcode_type.replace(/_/g, "-");
 
         return html`
             <div class="detail-overlay" @click=${this._handleOverlayClick}>
@@ -116,10 +116,6 @@ export class CardVaultDetail extends LitElement {
 
                     <div class="detail-info">
                         <div class="info-row">
-                            <span class="info-label">Type</span>
-                            <span>${typeLabel}</span>
-                        </div>
-                        <div class="info-row">
                             <span class="info-label">Value</span>
                             <span>${c.barcode_value}</span>
                         </div>
@@ -135,12 +131,16 @@ export class CardVaultDetail extends LitElement {
                                       ? html`<img
                                             src="/cardvault/images/${c.image_front}"
                                             alt="Card front"
+                                            style="cursor:pointer"
+                                            @click=${() => (this._fullscreenImage = `/cardvault/images/${c.image_front}`)}
                                         />`
                                       : nothing}
                                   ${c.image_back
                                       ? html`<img
                                             src="/cardvault/images/${c.image_back}"
                                             alt="Card back"
+                                            style="cursor:pointer"
+                                            @click=${() => (this._fullscreenImage = `/cardvault/images/${c.image_back}`)}
                                         />`
                                       : nothing}
                               </div>
@@ -148,6 +148,19 @@ export class CardVaultDetail extends LitElement {
                         : nothing}
                 </div>
             </div>
+            ${this._fullscreenImage
+                ? html`
+                      <div
+                          style="position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;cursor:pointer"
+                          @click=${() => (this._fullscreenImage = null)}
+                      >
+                          <img
+                              src=${this._fullscreenImage}
+                              style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px"
+                          />
+                      </div>
+                  `
+                : nothing}
         `;
     }
 }

@@ -512,7 +512,7 @@ const ct=t=>(e,r)=>{void 0!==r?r.addInitializer(()=>{customElements.define(t,e)}
             </div>
             ${this._fullscreenImage?F`
                       <div
-                          style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;cursor:pointer"
+                          style="position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;cursor:pointer"
                           @click=${()=>this._fullscreenImage=null}
                       >
                           <img
