@@ -37,7 +37,7 @@ export const cardStyles = css`
         overflow: hidden;
         cursor: pointer;
         transition: transform 0.15s ease, box-shadow 0.15s ease;
-        aspect-ratio: 1.586;
+        aspect-ratio: 1.2;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
@@ -87,7 +87,7 @@ export const cardStyles = css`
         border-radius: var(--cv-radius);
         overflow: hidden;
         cursor: pointer;
-        aspect-ratio: 1.586;
+        aspect-ratio: 1.2;
         display: flex;
         flex-direction: column;
         align-items: center;
