@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/logo.png" alt="CardVault logo" width="120">
+</p>
+
 # CardVault
 
 A Home Assistant custom integration for managing your loyalty and discount cards. Store all your shopping cards in one place and display their barcodes on your dashboard.
