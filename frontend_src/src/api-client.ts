@@ -7,27 +7,16 @@ export class CardVaultAPI {
         this.hass = hass;
     }
 
-    private get headers(): Record<string, string> {
-        return {
-            Authorization: `Bearer ${this.hass.auth.data.access_token}`,
-        };
-    }
-
     async getCards(): Promise<Card[]> {
-        const resp = await fetch("/api/cardvault/cards", {
-            headers: this.headers,
-        });
+        const resp = await this.hass.fetchWithAuth("/api/cardvault/cards");
         if (!resp.ok) throw new Error(`Failed to fetch cards: ${resp.status}`);
         return resp.json();
     }
 
     async createCard(data: Partial<Card>): Promise<Card> {
-        const resp = await fetch("/api/cardvault/cards", {
+        const resp = await this.hass.fetchWithAuth("/api/cardvault/cards", {
             method: "POST",
-            headers: {
-                ...this.headers,
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
         if (!resp.ok) throw new Error(`Failed to create card: ${resp.status}`);
@@ -35,23 +24,23 @@ export class CardVaultAPI {
     }
 
     async updateCard(id: string, data: Partial<Card>): Promise<Card> {
-        const resp = await fetch(`/api/cardvault/cards/${id}`, {
-            method: "PUT",
-            headers: {
-                ...this.headers,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
+        const resp = await this.hass.fetchWithAuth(
+            `/api/cardvault/cards/${id}`,
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            }
+        );
         if (!resp.ok) throw new Error(`Failed to update card: ${resp.status}`);
         return resp.json();
     }
 
     async deleteCard(id: string): Promise<void> {
-        const resp = await fetch(`/api/cardvault/cards/${id}`, {
-            method: "DELETE",
-            headers: this.headers,
-        });
+        const resp = await this.hass.fetchWithAuth(
+            `/api/cardvault/cards/${id}`,
+            { method: "DELETE" }
+        );
         if (!resp.ok) throw new Error(`Failed to delete card: ${resp.status}`);
     }
 
@@ -62,27 +51,18 @@ export class CardVaultAPI {
     ): Promise<{ filename: string }> {
         const formData = new FormData();
         formData.append("file", file);
-        const resp = await fetch(
+        const resp = await this.hass.fetchWithAuth(
             `/api/cardvault/cards/${cardId}/image/${side}`,
-            {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${this.hass.auth.data.access_token}`,
-                },
-                body: formData,
-            }
+            { method: "POST", body: formData }
         );
         if (!resp.ok) throw new Error(`Failed to upload image: ${resp.status}`);
         return resp.json();
     }
 
     async deleteImage(cardId: string, side: "front" | "back"): Promise<void> {
-        const resp = await fetch(
+        const resp = await this.hass.fetchWithAuth(
             `/api/cardvault/cards/${cardId}/image/${side}`,
-            {
-                method: "DELETE",
-                headers: this.headers,
-            }
+            { method: "DELETE" }
         );
         if (!resp.ok)
             throw new Error(`Failed to delete image: ${resp.status}`);
@@ -92,9 +72,9 @@ export class CardVaultAPI {
         available: boolean;
         reason?: string;
     }> {
-        const resp = await fetch("/api/cardvault/scan/status", {
-            headers: this.headers,
-        });
+        const resp = await this.hass.fetchWithAuth(
+            "/api/cardvault/scan/status"
+        );
         if (!resp.ok)
             throw new Error(`Failed to check scan status: ${resp.status}`);
         return resp.json();
@@ -103,11 +83,8 @@ export class CardVaultAPI {
     async scanBarcode(file: File): Promise<BarcodeResult[]> {
         const formData = new FormData();
         formData.append("file", file);
-        const resp = await fetch("/api/cardvault/scan", {
+        const resp = await this.hass.fetchWithAuth("/api/cardvault/scan", {
             method: "POST",
-            headers: {
-                Authorization: `Bearer ${this.hass.auth.data.access_token}`,
-            },
             body: formData,
         });
         if (!resp.ok) throw new Error(`Failed to scan barcode: ${resp.status}`);

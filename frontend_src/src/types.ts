@@ -28,6 +28,7 @@ export interface HomeAssistant {
             access_token: string;
         };
     };
+    fetchWithAuth: (path: string, init?: RequestInit) => Promise<Response>;
     callWS: (msg: Record<string, unknown>) => Promise<unknown>;
     language: string;
 }

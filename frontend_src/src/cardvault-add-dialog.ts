@@ -42,6 +42,7 @@ export class CardVaultAddDialog extends LitElement {
     @state() private _scanAvailable = true;
     @state() private _scanUnavailableReason = "";
     @state() private _scanResult = "";
+    @state() private _scanError = "";
     @state() private _saving = false;
     @state() private _error = "";
     @state() private _frontFile: File | null = null;
@@ -56,6 +57,9 @@ export class CardVaultAddDialog extends LitElement {
             this._note = this.editCard.note || "";
             this._color = this.editCard.color || "#607D8B";
         }
+    }
+
+    protected firstUpdated(): void {
         this._checkScanAvailability();
     }
 
@@ -91,7 +95,7 @@ export class CardVaultAddDialog extends LitElement {
 
             this._scanning = true;
             this._scanResult = "";
-            this._error = "";
+            this._scanError = "";
 
             try {
                 const api = new CardVaultAPI(this.hass);
@@ -101,10 +105,10 @@ export class CardVaultAddDialog extends LitElement {
                     this._barcodeType = results[0].barcode_type;
                     this._scanResult = `Found ${results[0].barcode_type.replace(/_/g, "-")}: ${results[0].barcode_value}`;
                 } else {
-                    this._error = "No barcode found in image";
+                    this._scanError = "No barcode found in image";
                 }
             } catch {
-                this._error = "Failed to scan image";
+                this._scanError = "Failed to scan image";
             } finally {
                 this._scanning = false;
             }
@@ -264,6 +268,13 @@ export class CardVaultAddDialog extends LitElement {
                             ${this._scanResult
                                 ? html`<div class="scan-result">
                                       ${this._scanResult}
+                                  </div>`
+                                : nothing}
+                            ${this._scanError
+                                ? html`<div
+                                      style="color:var(--error-color,#db4437);font-size:0.95em;margin-top:8px;font-weight:500"
+                                  >
+                                      ${this._scanError}
                                   </div>`
                                 : nothing}
                         </div>
