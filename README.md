@@ -14,6 +14,9 @@ A Home Assistant custom integration for managing your loyalty and discount cards
 - Supports EAN-13, EAN-8, Code 128, Code 39, QR Code, and UPC-A
 - Add cards by manually entering barcode data or by scanning from a photo
 - Store front/back images of your physical cards
+- Auto-fetched store logos for card branding
+- Two layout modes: grid tiles or compact circle icons
+- Use an uploaded card image as the tile background
 - Custom Lovelace card with tap-to-show-barcode
 - Fully local - no cloud services required
 
@@ -60,6 +63,7 @@ You can also upload photos of the front and back of your card for reference.
 
 In the Lovelace card editor, you can set:
 - **Title**: The header text (default: "My Cards")
+- **Layout**: Grid tiles or compact circle icons
 - **Columns**: Number of columns in the grid (0 = auto)
 
 ## Prerequisites
