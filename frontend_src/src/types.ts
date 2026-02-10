@@ -7,6 +7,7 @@ export interface Card {
     image_front: string | null;
     image_back: string | null;
     color: string;
+    tile_background: "none" | "front" | "back";
     created_at: string;
     updated_at: string;
 }

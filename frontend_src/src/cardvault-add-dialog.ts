@@ -47,6 +47,7 @@ export class CardVaultAddDialog extends LitElement {
     @state() private _error = "";
     @state() private _frontFile: File | null = null;
     @state() private _backFile: File | null = null;
+    @state() private _tileBackground: "none" | "front" | "back" = "none";
 
     connectedCallback(): void {
         super.connectedCallback();
@@ -56,11 +57,20 @@ export class CardVaultAddDialog extends LitElement {
             this._barcodeType = this.editCard.barcode_type;
             this._note = this.editCard.note || "";
             this._color = this.editCard.color || "#607D8B";
+            this._tileBackground = this.editCard.tile_background || "none";
         }
     }
 
     protected firstUpdated(): void {
         this._checkScanAvailability();
+    }
+
+    private get _hasFront(): boolean {
+        return !!(this._frontFile || this.editCard?.image_front);
+    }
+
+    private get _hasBack(): boolean {
+        return !!(this._backFile || this.editCard?.image_back);
     }
 
     private async _checkScanAvailability(): Promise<void> {
@@ -150,6 +160,7 @@ export class CardVaultAddDialog extends LitElement {
                 barcode_type: this._barcodeType as Card["barcode_type"],
                 note: this._note.trim(),
                 color: this._color,
+                tile_background: this._tileBackground,
             };
 
             let card: Card;
@@ -365,6 +376,43 @@ export class CardVaultAddDialog extends LitElement {
                                 </div>
                             </div>
                         </div>
+
+                        ${this._hasFront || this._hasBack
+                            ? html`
+                                  <div class="form-group">
+                                      <label>Tile Background</label>
+                                      <select
+                                          @change=${(e: Event) =>
+                                              (this._tileBackground = (
+                                                  e.target as HTMLSelectElement
+                                              ).value as "none" | "front" | "back")}
+                                      >
+                                          <option
+                                              value="none"
+                                              ?selected=${this._tileBackground === "none"}
+                                          >
+                                              None (color only)
+                                          </option>
+                                          ${this._hasFront
+                                              ? html`<option
+                                                    value="front"
+                                                    ?selected=${this._tileBackground === "front"}
+                                                >
+                                                    Front picture
+                                                </option>`
+                                              : nothing}
+                                          ${this._hasBack
+                                              ? html`<option
+                                                    value="back"
+                                                    ?selected=${this._tileBackground === "back"}
+                                                >
+                                                    Back picture
+                                                </option>`
+                                              : nothing}
+                                      </select>
+                                  </div>
+                              `
+                            : nothing}
 
                     </div>
 

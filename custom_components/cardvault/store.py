@@ -54,6 +54,7 @@ class CardVaultStore:
             "image_front": None,
             "image_back": None,
             "color": card_data.get("color", "#607D8B"),
+            "tile_background": card_data.get("tile_background", "none"),
             "created_at": now,
             "updated_at": now,
         }
@@ -73,6 +74,7 @@ class CardVaultStore:
             "barcode_type",
             "note",
             "color",
+            "tile_background",
             "image_front",
             "image_back",
         }

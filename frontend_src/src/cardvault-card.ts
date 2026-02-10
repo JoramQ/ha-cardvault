@@ -147,21 +147,32 @@ export class CardVaultCard extends LitElement {
                       : html`
                             <div class="card-grid" style=${gridStyle}>
                                 ${this._cards.map(
-                                    (card) => html`
-                                        <div
-                                            class="card-tile"
-                                            style="background:${card.color || "#607D8B"}"
-                                            @click=${() =>
-                                                this._handleCardClick(card)}
-                                        >
-                                            <span class="tile-name"
-                                                >${card.name}</span
+                                    (card) => {
+                                        const bgImage =
+                                            card.tile_background === "front" && card.image_front
+                                                ? card.image_front
+                                                : card.tile_background === "back" && card.image_back
+                                                  ? card.image_back
+                                                  : null;
+                                        const tileStyle = bgImage
+                                            ? `background:${card.color || "#607D8B"} url(/cardvault/images/${bgImage}) center/cover`
+                                            : `background:${card.color || "#607D8B"}`;
+                                        return html`
+                                            <div
+                                                class="card-tile"
+                                                style=${tileStyle}
+                                                @click=${() =>
+                                                    this._handleCardClick(card)}
                                             >
-                                            <span class="tile-type"
-                                                >${card.barcode_type.replace(/_/g, "-")}</span
-                                            >
-                                        </div>
-                                    `
+                                                <span class="tile-name"
+                                                    >${card.name}</span
+                                                >
+                                                <span class="tile-type"
+                                                    >${card.barcode_type.replace(/_/g, "-")}</span
+                                                >
+                                            </div>
+                                        `;
+                                    }
                                 )}
                                 <button
                                     class="add-btn"
