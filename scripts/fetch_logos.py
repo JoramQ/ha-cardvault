@@ -24,7 +24,7 @@ from PIL import Image
 SCRIPT_DIR = Path(__file__).parent
 DEFAULT_CONFIG = SCRIPT_DIR / "logos.yaml"
 DEFAULT_OUTPUT = (
-    SCRIPT_DIR.parent / "custom_components" / "cardvault" / "cardvault_images"
+    SCRIPT_DIR.parent / "custom_components" / "cardvault" / "logos"
 )
 
 TIMEOUT = (5, 10)  # (connect timeout, read timeout) in seconds

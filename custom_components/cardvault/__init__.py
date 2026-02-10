@@ -52,9 +52,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     store = CardVaultStore(hass)
     await store.async_load()
 
-    # Ensure images directory exists
+    # Ensure images directory exists and copy bundled logos
     images_dir = Path(hass.config.path(IMAGES_SUBDIR))
-    await hass.async_add_executor_job(lambda: images_dir.mkdir(exist_ok=True))
+    bundled_logos = Path(__file__).parent / "logos"
+
+    def _setup_images() -> None:
+        images_dir.mkdir(exist_ok=True)
+        if bundled_logos.is_dir():
+            for logo in bundled_logos.iterdir():
+                if logo.name.startswith("logo_") and logo.name.endswith(".png"):
+                    dest = images_dir / logo.name
+                    if not dest.exists():
+                        dest.write_bytes(logo.read_bytes())
+
+    await hass.async_add_executor_job(_setup_images)
 
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN]["store"] = store
