@@ -2,6 +2,12 @@
 
 A Home Assistant custom integration for managing your loyalty and discount cards. Store all your shopping cards in one place and display their barcodes on your dashboard.
 
+<p align="center">
+  <img src="docs/images/ha-cardvault-1.png" alt="Card grid view" width="300">
+  <img src="docs/images/ha-cardvault-2.png" alt="Compact icon view" width="300">
+  <img src="docs/images/ha-cardvault-3.png" alt="Barcode detail dialog" width="280">
+</p>
+
 ## Features
 
 - Store loyalty/discount cards with barcodes
