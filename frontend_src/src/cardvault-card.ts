@@ -208,19 +208,18 @@ export class CardVaultCard extends LitElement {
                                                   @click=${() =>
                                                       this._handleCardClick(card)}
                                               >
-                                                  ${card.logo && card.tile_background !== "logo"
-                                                      ? html`<img
-                                                            class="tile-logo"
-                                                            src="/cardvault/images/${card.logo}"
-                                                            alt=""
-                                                        />`
-                                                      : nothing}
-                                                  <span class="tile-name"
-                                                      >${card.name}</span
-                                                  >
-                                                  <span class="tile-type"
-                                                      >${card.barcode_type.replace(/_/g, "-")}</span
-                                                  >
+                                                  <div class="tile-content">
+                                                      ${card.logo && card.tile_background !== "logo"
+                                                          ? html`<img
+                                                                class="tile-logo"
+                                                                src="/cardvault/images/${card.logo}"
+                                                                alt=""
+                                                            />`
+                                                          : nothing}
+                                                      <span class="tile-name"
+                                                          >${card.name}</span
+                                                      >
+                                                  </div>
                                               </div>
                                           `;
                                       }

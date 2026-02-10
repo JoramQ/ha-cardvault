@@ -38,10 +38,8 @@ export const cardStyles = css`
         cursor: pointer;
         transition: transform 0.15s ease, box-shadow 0.15s ease;
         display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 10px;
-        min-height: 60px;
+        align-items: center;
+        padding: 12px;
         color: #fff;
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -56,6 +54,13 @@ export const cardStyles = css`
         transform: scale(0.97);
     }
 
+    .card-tile .tile-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+    }
+
     .card-tile .tile-name {
         font-weight: 600;
         font-size: 0.9em;
@@ -63,16 +68,7 @@ export const cardStyles = css`
         word-break: break-word;
     }
 
-    .card-tile .tile-type {
-        font-size: 0.7em;
-        opacity: 0.85;
-        margin-top: 2px;
-    }
-
     .card-tile .tile-logo {
-        position: absolute;
-        top: 8px;
-        left: 8px;
         width: 28px;
         height: 28px;
         border-radius: 6px;
@@ -80,6 +76,7 @@ export const cardStyles = css`
         background: rgba(255, 255, 255, 0.85);
         padding: 2px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        flex-shrink: 0;
     }
 
     .add-btn {
