@@ -97,6 +97,65 @@ export const cardStyles = css`
         margin-bottom: 4px;
     }
 
+    .compact-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 8px 16px 16px;
+        align-items: center;
+    }
+
+    .compact-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.85em;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        user-select: none;
+    }
+
+    .compact-circle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .compact-circle:active {
+        transform: scale(0.95);
+    }
+
+    .compact-add {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed var(--cv-divider);
+        background: transparent;
+        color: var(--cv-text-secondary);
+        cursor: pointer;
+        transition: border-color 0.15s ease, color 0.15s ease;
+        padding: 0;
+    }
+
+    .compact-add:hover {
+        border-color: var(--cv-primary);
+        color: var(--cv-primary);
+    }
+
+    .compact-add svg {
+        width: 24px;
+        height: 24px;
+    }
+
     .empty-state {
         padding: 32px 16px;
         text-align: center;

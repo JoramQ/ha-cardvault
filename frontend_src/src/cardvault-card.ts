@@ -111,8 +111,17 @@ export class CardVaultCard extends LitElement {
         await this._loadCards();
     }
 
+    private _getInitials(name: string): string {
+        const words = name.trim().split(/\s+/);
+        if (words.length >= 2) {
+            return (words[0][0] + words[1][0]).toUpperCase();
+        }
+        return name.slice(0, 2).toUpperCase();
+    }
+
     protected render(): TemplateResult {
         const title = this._config?.title || "My Cards";
+        const layout = this._config?.layout || "default";
         const columns = this._config?.columns;
         const gridStyle = columns
             ? `grid-template-columns: repeat(${columns}, 1fr)`
@@ -144,47 +153,74 @@ export class CardVaultCard extends LitElement {
                                 </button>
                             </div>
                         `
-                      : html`
-                            <div class="card-grid" style=${gridStyle}>
-                                ${this._cards.map(
-                                    (card) => {
-                                        const bgImage =
-                                            card.tile_background === "front" && card.image_front
-                                                ? card.image_front
-                                                : card.tile_background === "back" && card.image_back
-                                                  ? card.image_back
-                                                  : null;
-                                        const tileStyle = bgImage
-                                            ? `background:${card.color || "#607D8B"} url(/cardvault/images/${bgImage}) center/cover`
-                                            : `background:${card.color || "#607D8B"}`;
-                                        return html`
-                                            <div
-                                                class="card-tile"
-                                                style=${tileStyle}
-                                                @click=${() =>
-                                                    this._handleCardClick(card)}
-                                            >
-                                                <span class="tile-name"
-                                                    >${card.name}</span
-                                                >
-                                                <span class="tile-type"
-                                                    >${card.barcode_type.replace(/_/g, "-")}</span
-                                                >
-                                            </div>
-                                        `;
-                                    }
-                                )}
-                                <button
-                                    class="add-btn"
-                                    @click=${this._handleAddClick}
-                                >
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                                    </svg>
-                                    Add Card
-                                </button>
-                            </div>
-                        `}
+                      : layout === "compact"
+                        ? html`
+                              <div class="compact-grid">
+                                  ${this._cards.map(
+                                      (card) => html`
+                                          <div
+                                              class="compact-circle"
+                                              style="background:${card.color || "#607D8B"}"
+                                              title=${card.name}
+                                              @click=${() =>
+                                                  this._handleCardClick(card)}
+                                          >
+                                              ${this._getInitials(card.name)}
+                                          </div>
+                                      `
+                                  )}
+                                  <button
+                                      class="compact-add"
+                                      @click=${this._handleAddClick}
+                                      title="Add Card"
+                                  >
+                                      <svg viewBox="0 0 24 24" fill="currentColor">
+                                          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                      </svg>
+                                  </button>
+                              </div>
+                          `
+                        : html`
+                              <div class="card-grid" style=${gridStyle}>
+                                  ${this._cards.map(
+                                      (card) => {
+                                          const bgImage =
+                                              card.tile_background === "front" && card.image_front
+                                                  ? card.image_front
+                                                  : card.tile_background === "back" && card.image_back
+                                                    ? card.image_back
+                                                    : null;
+                                          const tileStyle = bgImage
+                                              ? `background:${card.color || "#607D8B"} url(/cardvault/images/${bgImage}) center/cover`
+                                              : `background:${card.color || "#607D8B"}`;
+                                          return html`
+                                              <div
+                                                  class="card-tile"
+                                                  style=${tileStyle}
+                                                  @click=${() =>
+                                                      this._handleCardClick(card)}
+                                              >
+                                                  <span class="tile-name"
+                                                      >${card.name}</span
+                                                  >
+                                                  <span class="tile-type"
+                                                      >${card.barcode_type.replace(/_/g, "-")}</span
+                                                  >
+                                              </div>
+                                          `;
+                                      }
+                                  )}
+                                  <button
+                                      class="add-btn"
+                                      @click=${this._handleAddClick}
+                                  >
+                                      <svg viewBox="0 0 24 24" fill="currentColor">
+                                          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                      </svg>
+                                      Add Card
+                                  </button>
+                              </div>
+                          `}
             </ha-card>
 
             ${this._selectedCard

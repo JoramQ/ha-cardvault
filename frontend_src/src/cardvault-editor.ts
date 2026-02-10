@@ -65,6 +65,23 @@ export class CardVaultEditor extends LitElement {
                 />
             </div>
             <div class="form-group">
+                <label>Layout</label>
+                <select
+                    @change=${(e: Event) =>
+                        this._valueChanged(
+                            "layout",
+                            (e.target as HTMLSelectElement).value
+                        )}
+                >
+                    <option value="default" ?selected=${(this._config.layout || "default") === "default"}>
+                        Default (cards)
+                    </option>
+                    <option value="compact" ?selected=${this._config.layout === "compact"}>
+                        Compact (circles)
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label>Columns (0 = auto)</label>
                 <input
                     type="number"

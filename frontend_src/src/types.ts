@@ -16,6 +16,7 @@ export interface CardVaultCardConfig {
     type: string;
     title?: string;
     columns?: number;
+    layout?: "default" | "compact";
 }
 
 export interface BarcodeResult {
