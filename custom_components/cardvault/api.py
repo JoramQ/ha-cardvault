@@ -161,20 +161,32 @@ class CardImageView(HomeAssistantView):
         if len(file_data) > MAX_IMAGE_SIZE:
             return self.json_message("File too large (max 10 MB)", status_code=400)
 
+        if not file_data:
+            return self.json_message("Empty file uploaded", status_code=400)
+
         # Determine extension from filename
         original_name = field.filename or "image.jpg"
         ext = Path(original_name).suffix or ".jpg"
         filename = f"{card_id}_{side}{ext}"
 
         hass: HomeAssistant = request.app["hass"]
-        filepath = Path(hass.config.path(IMAGES_SUBDIR)) / filename
+        images_dir = Path(hass.config.path(IMAGES_SUBDIR))
+        filepath = images_dir / filename
 
         def _write() -> None:
+            images_dir.mkdir(exist_ok=True)
             filepath.write_bytes(file_data)
 
-        await hass.async_add_executor_job(_write)
+        try:
+            await hass.async_add_executor_job(_write)
+        except Exception:
+            _LOGGER.exception("Failed to write image file %s", filepath)
+            return self.json_message(
+                "Failed to save image file", status_code=500
+            )
 
         store.update_card(card_id, {f"image_{side}": filename})
+        _LOGGER.debug("Saved image %s (%d bytes)", filename, len(file_data))
         return self.json({"filename": filename})
 
     async def delete(

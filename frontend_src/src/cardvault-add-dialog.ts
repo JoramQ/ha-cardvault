@@ -156,15 +156,24 @@ export class CardVaultAddDialog extends LitElement {
             }
 
             // Upload images if selected
-            if (this._frontFile) {
-                await api.uploadImage(card.id, "front", this._frontFile);
-            }
-            if (this._backFile) {
-                await api.uploadImage(card.id, "back", this._backFile);
+            try {
+                if (this._frontFile) {
+                    await api.uploadImage(card.id, "front", this._frontFile);
+                }
+                if (this._backFile) {
+                    await api.uploadImage(card.id, "back", this._backFile);
+                }
+            } catch (imgErr) {
+                console.error("CardVault: image upload failed", imgErr);
+                this._error = "Card saved but image upload failed";
+                this._saving = false;
+                this.dispatchEvent(new CustomEvent("saved"));
+                return;
             }
 
             this.dispatchEvent(new CustomEvent("saved"));
-        } catch {
+        } catch (err) {
+            console.error("CardVault: save failed", err);
             this._error = "Failed to save card";
         } finally {
             this._saving = false;
