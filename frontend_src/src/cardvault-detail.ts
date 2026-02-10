@@ -72,7 +72,16 @@ export class CardVaultDetail extends LitElement {
             <div class="detail-overlay" @click=${this._handleOverlayClick}>
                 <div class="detail-card">
                     <div class="detail-header">
-                        <h2>${c.name}</h2>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            ${c.logo
+                                ? html`<img
+                                      src="/cardvault/images/${c.logo}"
+                                      alt=""
+                                      style="width:32px;height:32px;border-radius:6px;object-fit:contain"
+                                  />`
+                                : nothing}
+                            <h2>${c.name}</h2>
+                        </div>
                         <div class="actions">
                             <button
                                 class="btn-icon"

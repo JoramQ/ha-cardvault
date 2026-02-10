@@ -6,8 +6,9 @@ export interface Card {
     note: string;
     image_front: string | null;
     image_back: string | null;
+    logo: string | null;
     color: string;
-    tile_background: "none" | "front" | "back";
+    tile_background: "none" | "front" | "back" | "logo";
     created_at: string;
     updated_at: string;
 }

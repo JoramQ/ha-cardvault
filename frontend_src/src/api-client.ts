@@ -7,6 +7,12 @@ export class CardVaultAPI {
         this.hass = hass;
     }
 
+    async getLogos(): Promise<string[]> {
+        const resp = await this.hass.fetchWithAuth("/api/cardvault/logos");
+        if (!resp.ok) throw new Error(`Failed to fetch logos: ${resp.status}`);
+        return resp.json();
+    }
+
     async getCards(): Promise<Card[]> {
         const resp = await this.hass.fetchWithAuth("/api/cardvault/cards");
         if (!resp.ok) throw new Error(`Failed to fetch cards: ${resp.status}`);

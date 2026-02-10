@@ -1,0 +1,61 @@
+# CardVault Logo Fetcher Configuration
+# Add company domains here - the script will try to fetch the best logo for each.
+#
+# Fields:
+#   domain: the company's website domain
+#   name:   filename to save as (saved as logo_{name}.png)
+#
+# You can also manually add logo files to the output directory.
+# Just use the logo_ prefix naming convention (e.g., logo_mystore.png).
+
+logos:
+  # Dutch supermarkets
+  - domain: static.ah.nl
+    name: albert-heijn
+  - domain: jumbo.com
+    name: jumbo
+  - domain: lidl.nl
+    name: lidl
+  - domain: plus.nl
+    name: plus
+  - domain: dirk.nl
+    name: dirk
+  - domain: aldi.nl
+    name: aldi
+
+  # Dutch retail / department stores
+  - domain: hema.nl
+    name: hema
+  # NOTE: action.nl blocks icon fetching - add logo_action.png manually
+  # - domain: action.nl
+  #   name: action
+  - domain: blokker.nl
+    name: blokker
+  - domain: ikea.com
+    name: ikea
+  - domain: flyingtiger.com
+    name: flying-tiger
+
+  # Dutch drugstores / health
+  - domain: kruidvat.nl
+    name: kruidvat
+  - domain: etos.nl
+    name: etos
+
+  # Dutch electronics / online
+  - domain: bol.com
+    name: bol
+  - domain: coolblue.nl
+    name: coolblue
+  - domain: mediamarkt.nl
+    name: mediamarkt
+
+  # Dutch DIY / home
+  - domain: gamma.nl
+    name: gamma
+  - domain: praxis.nl
+    name: praxis
+
+  # Dutch specialty
+  - domain: gall.nl
+    name: gall-en-gall

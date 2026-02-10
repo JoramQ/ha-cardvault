@@ -216,6 +216,33 @@ class CardImageView(HomeAssistantView):
         return self.json_message("Image deleted")
 
 
+class LogoListView(HomeAssistantView):
+    """Handle /api/cardvault/logos."""
+
+    url = "/api/cardvault/logos"
+    name = "api:cardvault:logos"
+    requires_auth = True
+
+    async def get(self, request: web.Request) -> web.Response:
+        """List available logo files."""
+        images_path = _get_images_path(request)
+
+        def _list_logos() -> list[str]:
+            if not images_path.is_dir():
+                return []
+            return sorted(
+                f.name
+                for f in images_path.iterdir()
+                if f.is_file()
+                and f.name.startswith("logo_")
+                and f.name.endswith(".png")
+            )
+
+        hass: HomeAssistant = request.app["hass"]
+        logos = await hass.async_add_executor_job(_list_logos)
+        return self.json(logos)
+
+
 class BarcodeScanStatusView(HomeAssistantView):
     """Handle /api/cardvault/scan/status."""
 
@@ -281,6 +308,7 @@ API_VIEWS = [
     CardListView,
     CardDetailView,
     CardImageView,
+    LogoListView,
     BarcodeScanStatusView,
     BarcodeScanView,
 ]

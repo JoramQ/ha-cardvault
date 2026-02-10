@@ -165,7 +165,13 @@ export class CardVaultCard extends LitElement {
                                               @click=${() =>
                                                   this._handleCardClick(card)}
                                           >
-                                              ${this._getInitials(card.name)}
+                                              ${card.logo
+                                                  ? html`<img
+                                                        src="/cardvault/images/${card.logo}"
+                                                        alt=""
+                                                        style="width:100%;height:100%;object-fit:cover;border-radius:50%"
+                                                    />`
+                                                  : this._getInitials(card.name)}
                                           </div>
                                       `
                                   )}
@@ -189,7 +195,9 @@ export class CardVaultCard extends LitElement {
                                                   ? card.image_front
                                                   : card.tile_background === "back" && card.image_back
                                                     ? card.image_back
-                                                    : null;
+                                                    : card.tile_background === "logo" && card.logo
+                                                      ? card.logo
+                                                      : null;
                                           const tileStyle = bgImage
                                               ? `background:${card.color || "#607D8B"} url(/cardvault/images/${bgImage}) center/cover`
                                               : `background:${card.color || "#607D8B"}`;
@@ -200,6 +208,13 @@ export class CardVaultCard extends LitElement {
                                                   @click=${() =>
                                                       this._handleCardClick(card)}
                                               >
+                                                  ${card.logo && card.tile_background !== "logo"
+                                                      ? html`<img
+                                                            class="tile-logo"
+                                                            src="/cardvault/images/${card.logo}"
+                                                            alt=""
+                                                        />`
+                                                      : nothing}
                                                   <span class="tile-name"
                                                       >${card.name}</span
                                                   >

@@ -47,7 +47,9 @@ export class CardVaultAddDialog extends LitElement {
     @state() private _error = "";
     @state() private _frontFile: File | null = null;
     @state() private _backFile: File | null = null;
-    @state() private _tileBackground: "none" | "front" | "back" = "none";
+    @state() private _tileBackground: "none" | "front" | "back" | "logo" = "none";
+    @state() private _logo: string | null = null;
+    @state() private _availableLogos: string[] = [];
 
     connectedCallback(): void {
         super.connectedCallback();
@@ -58,11 +60,22 @@ export class CardVaultAddDialog extends LitElement {
             this._note = this.editCard.note || "";
             this._color = this.editCard.color || "#607D8B";
             this._tileBackground = this.editCard.tile_background || "none";
+            this._logo = this.editCard.logo || null;
         }
     }
 
     protected firstUpdated(): void {
         this._checkScanAvailability();
+        this._loadLogos();
+    }
+
+    private async _loadLogos(): Promise<void> {
+        try {
+            const api = new CardVaultAPI(this.hass);
+            this._availableLogos = await api.getLogos();
+        } catch {
+            this._availableLogos = [];
+        }
     }
 
     private get _hasFront(): boolean {
@@ -71,6 +84,10 @@ export class CardVaultAddDialog extends LitElement {
 
     private get _hasBack(): boolean {
         return !!(this._backFile || this.editCard?.image_back);
+    }
+
+    private get _hasLogo(): boolean {
+        return !!this._logo;
     }
 
     private async _checkScanAvailability(): Promise<void> {
@@ -160,7 +177,11 @@ export class CardVaultAddDialog extends LitElement {
                 barcode_type: this._barcodeType as Card["barcode_type"],
                 note: this._note.trim(),
                 color: this._color,
-                tile_background: this._tileBackground,
+                logo: this._logo,
+                tile_background:
+                    this._tileBackground === "logo" && !this._logo
+                        ? "none" as const
+                        : this._tileBackground,
             };
 
             let card: Card;
@@ -336,6 +357,41 @@ export class CardVaultAddDialog extends LitElement {
                             </div>
                         </div>
 
+                        ${this._availableLogos.length > 0
+                            ? html`
+                                  <div class="form-group">
+                                      <label>Logo</label>
+                                      <div class="logo-picker">
+                                          <div
+                                              class="logo-option ${this._logo === null ? "selected" : ""}"
+                                              @click=${() => {
+                                                  this._logo = null;
+                                                  if (this._tileBackground === "logo") {
+                                                      this._tileBackground = "none";
+                                                  }
+                                              }}
+                                          >
+                                              <span style="font-size:0.7em;color:var(--secondary-text-color,#727272)">None</span>
+                                          </div>
+                                          ${this._availableLogos.map(
+                                              (filename) => html`
+                                                  <div
+                                                      class="logo-option ${this._logo === filename ? "selected" : ""}"
+                                                      @click=${() => (this._logo = filename)}
+                                                      title=${filename.replace("logo_", "").replace(".png", "")}
+                                                  >
+                                                      <img
+                                                          src="/cardvault/images/${filename}"
+                                                          alt=${filename.replace("logo_", "").replace(".png", "")}
+                                                      />
+                                                  </div>
+                                              `
+                                          )}
+                                      </div>
+                                  </div>
+                              `
+                            : nothing}
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Front Image</label>
@@ -377,7 +433,7 @@ export class CardVaultAddDialog extends LitElement {
                             </div>
                         </div>
 
-                        ${this._hasFront || this._hasBack
+                        ${this._hasFront || this._hasBack || this._hasLogo
                             ? html`
                                   <div class="form-group">
                                       <label>Tile Background</label>
@@ -385,7 +441,7 @@ export class CardVaultAddDialog extends LitElement {
                                           @change=${(e: Event) =>
                                               (this._tileBackground = (
                                                   e.target as HTMLSelectElement
-                                              ).value as "none" | "front" | "back")}
+                                              ).value as "none" | "front" | "back" | "logo")}
                                       >
                                           <option
                                               value="none"
@@ -393,6 +449,14 @@ export class CardVaultAddDialog extends LitElement {
                                           >
                                               None (color only)
                                           </option>
+                                          ${this._hasLogo
+                                              ? html`<option
+                                                    value="logo"
+                                                    ?selected=${this._tileBackground === "logo"}
+                                                >
+                                                    Logo
+                                                </option>`
+                                              : nothing}
                                           ${this._hasFront
                                               ? html`<option
                                                     value="front"

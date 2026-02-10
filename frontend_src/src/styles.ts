@@ -69,6 +69,19 @@ export const cardStyles = css`
         margin-top: 2px;
     }
 
+    .card-tile .tile-logo {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        object-fit: contain;
+        background: rgba(255, 255, 255, 0.85);
+        padding: 2px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
     .add-btn {
         position: relative;
         border-radius: var(--cv-radius);
@@ -338,6 +351,39 @@ export const dialogStyles = css`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    .logo-picker {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 4px 0;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .logo-option {
+        flex: 0 0 48px;
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        border: 2px solid var(--divider-color, #e0e0e0);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: border-color 0.15s ease;
+    }
+
+    .logo-option.selected {
+        border-color: var(--primary-color, #03a9f4);
+        box-shadow: 0 0 0 1px var(--primary-color, #03a9f4);
+    }
+
+    .logo-option img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
 
     .scan-section {
