@@ -523,6 +523,11 @@ const ct=t=>(e,r)=>{void 0!==r?r.addInitializer(()=>{customElements.define(t,e)}
                     </div>
 
                     <div class="dialog-body">
+                        ${this._error?F`<div
+                                  style="color:var(--error-color,#db4437);font-size:0.95em;font-weight:500;text-align:center;padding:8px 12px;margin-bottom:8px;background:rgba(219,68,55,0.08);border-radius:8px"
+                              >
+                                  ${this._error}
+                              </div>`:G}
                         <div class="form-group">
                             <label>Card Name</label>
                             <input
@@ -644,11 +649,6 @@ const ct=t=>(e,r)=>{void 0!==r?r.addInitializer(()=>{customElements.define(t,e)}
                             </div>
                         </div>
 
-                        ${this._error?F`<p
-                                  style="color:var(--error-color,#db4437);font-size:0.85em;margin:8px 0 0"
-                              >
-                                  ${this._error}
-                              </p>`:G}
                     </div>
 
                     <div class="dialog-footer">

@@ -200,6 +200,13 @@ export class CardVaultAddDialog extends LitElement {
                     </div>
 
                     <div class="dialog-body">
+                        ${this._error
+                            ? html`<div
+                                  style="color:var(--error-color,#db4437);font-size:0.95em;font-weight:500;text-align:center;padding:8px 12px;margin-bottom:8px;background:rgba(219,68,55,0.08);border-radius:8px"
+                              >
+                                  ${this._error}
+                              </div>`
+                            : nothing}
                         <div class="form-group">
                             <label>Card Name</label>
                             <input
@@ -359,13 +366,6 @@ export class CardVaultAddDialog extends LitElement {
                             </div>
                         </div>
 
-                        ${this._error
-                            ? html`<p
-                                  style="color:var(--error-color,#db4437);font-size:0.85em;margin:8px 0 0"
-                              >
-                                  ${this._error}
-                              </p>`
-                            : nothing}
                     </div>
 
                     <div class="dialog-footer">
