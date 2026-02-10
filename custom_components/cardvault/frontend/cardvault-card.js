@@ -73,11 +73,11 @@ const ct=t=>(e,r)=>{void 0!==r?r.addInitializer(()=>{customElements.define(t,e)}
         overflow: hidden;
         cursor: pointer;
         transition: transform 0.15s ease, box-shadow 0.15s ease;
-        aspect-ratio: 1.2;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         padding: 10px;
+        min-height: 60px;
         color: #fff;
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -123,7 +123,7 @@ const ct=t=>(e,r)=>{void 0!==r?r.addInitializer(()=>{customElements.define(t,e)}
         border-radius: var(--cv-radius);
         overflow: hidden;
         cursor: pointer;
-        aspect-ratio: 1.2;
+        min-height: 60px;
         display: flex;
         flex-direction: column;
         align-items: center;
